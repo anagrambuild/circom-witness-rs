@@ -1,11 +1,11 @@
 use std::{
     collections::HashMap,
-    ops::{BitAnd, Shl, Shr},
+    ops::{BitAnd, BitOr, BitXor, Shl, Shr, Not},
 };
 
 use crate::field::M;
 use ark_bn254::Fr;
-use ark_ff::PrimeField;
+use ark_ff::{PrimeField,Field};
 use rand::Rng;
 use ruint::aliases::U256;
 use serde::{Deserialize, Serialize};
@@ -47,6 +47,15 @@ pub enum Operation {
     Shl,
     Shr,
     Band,
+    Neg,
+    Inv,
+    Div,
+    Bor,
+    Bxor,
+    Bnot,
+    Pow,
+    Idiv,
+    Mod
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -65,6 +74,17 @@ impl Operation {
             Add => a.add_mod(b, M),
             Sub => a.add_mod(M - b, M),
             Mul => a.mul_mod(b, M),
+            Neg => a.wrapping_neg(),
+            Inv => a.inv_mod(M).unwrap(), //fix this
+            Div => {
+                let tmp = a.inv_mod(M).unwrap();
+                a.mul_mod(b, tmp)
+            },
+            Idiv => a.wrapping_div(b),
+            Pow => a.pow_mod(b, M),
+            Bnot => a.not(),
+            Bor => a.bitor(b),
+            Bxor => a.bitxor(b),
             Eq => U256::from(a == b),
             Neq => U256::from(a != b),
             Lt => U256::from(a < b),
@@ -75,6 +95,7 @@ impl Operation {
             Shl => compute_shl_uint(a, b),
             Shr => compute_shr_uint(a, b),
             Band => a.bitand(b),
+            Mod => a.wrapping_rem(M),
             _ => unimplemented!("operator {:?} not implemented", self),
         }
     }
@@ -85,6 +106,11 @@ impl Operation {
             Add => a + b,
             Sub => a - b,
             Mul => a * b,
+            Neg => -a,
+            Inv => a.inverse().unwrap(),
+            Div => a * b.inverse().unwrap(),
+            Idiv => a / b,
+
             _ => unimplemented!("operator {:?} not implemented for Montgomery", self),
         }
     }

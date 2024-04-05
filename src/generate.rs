@@ -64,16 +64,16 @@ mod ffi {
         unsafe fn Fr_sub(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_copy(to: *mut FrElement, a: *const FrElement);
         unsafe fn Fr_copyn(to: *mut FrElement, a: *const FrElement, n: usize);
-        // unsafe fn Fr_neg(to: *mut FrElement, a: *const FrElement);
-        // unsafe fn Fr_inv(to: *mut FrElement, a: *const FrElement);
-        // unsafe fn Fr_div(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
-        // unsafe fn Fr_square(to: *mut FrElement, a: *const FrElement);
+        unsafe fn Fr_neg(to: *mut FrElement, a: *const FrElement);
+        unsafe fn Fr_inv(to: *mut FrElement, a: *const FrElement);
+        unsafe fn Fr_div(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
+        unsafe fn Fr_square(to: *mut FrElement, a: *const FrElement);
         unsafe fn Fr_shl(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_shr(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_band(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
-        // fn Fr_bor(to: &mut FrElement, a: &FrElement, b: &FrElement);
-        // fn Fr_bxor(to: &mut FrElement, a: &FrElement, b: &FrElement);
-        // fn Fr_bnot(to: &mut FrElement, a: &FrElement);
+        unsafe fn Fr_bor(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
+        unsafe fn Fr_bxor(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
+        unsafe fn Fr_bnot(to: *mut FrElement, a: *const FrElement);
         unsafe fn Fr_eq(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_neq(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_lt(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
@@ -81,12 +81,13 @@ mod ffi {
         unsafe fn Fr_leq(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_geq(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn Fr_isTrue(a: *mut FrElement) -> bool;
-        // fn Fr_fromBool(to: &mut FrElement, a: bool);
+        unsafe fn Fr_mod(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
+        //unsafe fn Fr_fromBool(to: &mut FrElement, a: bool);
         unsafe fn Fr_toInt(a: *mut FrElement) -> u64;
         unsafe fn Fr_lor(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
         unsafe fn print(a: *mut FrElement);
-        // fn Fr_pow(to: &mut FrElement, a: &FrElement, b: &FrElement);
-        // fn Fr_idiv(to: &mut FrElement, a: &FrElement, b: &FrElement);
+        unsafe fn Fr_pow(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
+        unsafe fn Fr_idiv(to: *mut FrElement, a: *const FrElement, b: *const FrElement);
     }
 
     // C++ types and signatures exposed to Rust.

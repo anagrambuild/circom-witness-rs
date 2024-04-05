@@ -99,8 +99,24 @@ fn binop(op: Operation, to: *mut FrElement, a: *const FrElement, b: *const FrEle
     constant.push(ca && cb);
 }
 
-pub fn Fr_mul(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+#[allow(warnings)]
+pub unsafe fn Fr_mul(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Mul, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_neg(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Neg, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_inv(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Inv, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_div(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Div, to, a, b);
 }
 
 #[allow(warnings)]
@@ -109,8 +125,33 @@ pub unsafe fn Fr_add(to: *mut FrElement, a: *const FrElement, b: *const FrElemen
 }
 
 #[allow(warnings)]
+pub unsafe fn Fr_bor(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Bor, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_bxor(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Bxor, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_bnot(to: *mut FrElement, a: *const FrElement) {
+    binop(Operation::Bnot, to, a, a);
+}
+
+#[allow(warnings)]
 pub unsafe fn Fr_sub(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Sub, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_pow(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Pow, to, a, b);
+}
+
+#[allow(warnings)]
+pub unsafe fn Fr_idiv(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Idiv, to, a, b);
 }
 
 #[allow(warnings)]
@@ -126,17 +167,19 @@ pub fn Fr_copyn(to: *mut FrElement, a: *const FrElement, n: usize) {
         ptr::copy_nonoverlapping(a, to, n);
     }
 }
-
+#[allow(warnings)]
 /// Create a vector of FrElement with length `len`.
 /// Needed because the default constructor of opaque type is not implemented.
 pub fn create_vec(len: usize) -> Vec<FrElement> {
     vec![FrElement(usize::MAX); len]
 }
 
+#[allow(warnings)]
 pub fn create_vec_u32(len: usize) -> Vec<u32> {
     vec![0; len]
 }
 
+#[allow(warnings)]
 pub fn generate_position_array(
     prefix: String,
     dimensions: Vec<u32>,
@@ -154,6 +197,7 @@ pub fn generate_position_array(
     positions
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_toInt(a: *const FrElement) -> u64 {
     let nodes = NODES.lock().unwrap();
     let values = VALUES.lock().unwrap();
@@ -167,10 +211,12 @@ pub unsafe fn Fr_toInt(a: *const FrElement) -> u64 {
     values[a].try_into().unwrap()
 }
 
+#[allow(warnings)]
 pub unsafe fn print(a: *const FrElement) {
     println!("DEBUG>> {:?}", (*a).0);
 }
 
+#[allow(warnings)]
 pub fn Fr_isTrue(a: *mut FrElement) -> bool {
     let nodes = NODES.lock().unwrap();
     let values = VALUES.lock().unwrap();
@@ -184,42 +230,58 @@ pub fn Fr_isTrue(a: *mut FrElement) -> bool {
     values[a] != U256::ZERO
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_eq(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Eq, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_neq(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Neq, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_lt(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Lt, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_gt(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Gt, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_leq(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Leq, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_geq(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Geq, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_lor(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Lor, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_shl(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Shl, to, a, b);
 }
 
+#[allow(warnings)]
 pub unsafe fn Fr_shr(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Shr, to, a, b);
 }
 
+
+#[allow(warnings)]
+pub unsafe fn Fr_mod(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
+    binop(Operation::Mod, to, a, b);
+}
+
+#[allow(warnings)]
 pub unsafe fn Fr_band(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
     binop(Operation::Band, to, a, b);
 }
