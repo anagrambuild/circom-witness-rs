@@ -1,5 +1,4 @@
 use std::{env, fs, path::Path, process::Command};
-
 fn main() {
     if cfg!(feature = "build-witness") {
         let witness_cpp = env::var("WITNESS_CPP").unwrap();
@@ -26,9 +25,11 @@ fn main() {
             .status()
             .unwrap();
         assert!(status.success());
-
+                let clang = Path::new("/usr/bin/clang++");
         cxx_build::bridge("src/generate.rs")
             .file("src/circuit.cc")
+            .opt_level(0)
+            .compiler(clang)
             .flag_if_supported("-std=c++14")
             .flag_if_supported("-w")
             .flag_if_supported("-d")

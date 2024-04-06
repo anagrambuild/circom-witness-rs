@@ -55,7 +55,8 @@ pub enum Operation {
     Bnot,
     Pow,
     Idiv,
-    Mod
+    Mod,
+    Sqr
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -80,6 +81,7 @@ impl Operation {
                 let tmp = a.inv_mod(M).unwrap();
                 a.mul_mod(b, tmp)
             },
+            Sqr => a.pow_mod(U256::from(2), M),
             Idiv => a.wrapping_div(b),
             Pow => a.pow_mod(b, M),
             Bnot => a.not(),

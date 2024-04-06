@@ -105,13 +105,13 @@ pub unsafe fn Fr_mul(to: *mut FrElement, a: *const FrElement, b: *const FrElemen
 }
 
 #[allow(warnings)]
-pub unsafe fn Fr_neg(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
-    binop(Operation::Neg, to, a, b);
+pub unsafe fn Fr_neg(to: *mut FrElement, a: *const FrElement) {
+    binop(Operation::Neg, to, a, a);
 }
 
 #[allow(warnings)]
-pub unsafe fn Fr_inv(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
-    binop(Operation::Inv, to, a, b);
+pub unsafe fn Fr_inv(to: *mut FrElement, a: *const FrElement) {
+    binop(Operation::Inv, to, a, a);
 }
 
 #[allow(warnings)]
@@ -138,6 +138,12 @@ pub unsafe fn Fr_bxor(to: *mut FrElement, a: *const FrElement, b: *const FrEleme
 pub unsafe fn Fr_bnot(to: *mut FrElement, a: *const FrElement) {
     binop(Operation::Bnot, to, a, a);
 }
+
+#[allow(warnings)]
+pub unsafe fn Fr_square(to: *mut FrElement, a: *const FrElement) {
+    binop(Operation::Sqr, to, a, a);
+}
+
 
 #[allow(warnings)]
 pub unsafe fn Fr_sub(to: *mut FrElement, a: *const FrElement, b: *const FrElement) {
