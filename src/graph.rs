@@ -112,6 +112,7 @@ impl Operation {
             Inv => a.inverse().unwrap(),
             Div => a * b.inverse().unwrap(),
             Idiv => a / b,
+            
 
             _ => unimplemented!("operator {:?} not implemented for Montgomery", self),
         }

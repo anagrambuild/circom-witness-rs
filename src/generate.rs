@@ -7,6 +7,7 @@ use byteorder::{LittleEndian, ReadBytesExt};
 use ffi::InputOutputList;
 use ruint::{aliases::U256, uint};
 use serde::{Deserialize, Serialize};
+use std::f32::EPSILON;
 use std::{io::Read, time::Instant};
 
 #[cxx::bridge]
@@ -140,26 +141,27 @@ pub fn get_constants() -> Vec<FrElement> {
     if ffi::get_size_of_constants() == 0 {
         return vec![];
     }
-
     // skip the first part
     let mut bytes = &DAT_BYTES[(ffi::get_size_of_input_hashmap() as usize) * 24
         + (ffi::get_size_of_witness() as usize) * 8..];
     let mut constants = vec![field::constant(U256::from(0)); ffi::get_size_of_constants() as usize];
     for i in 0..ffi::get_size_of_constants() as usize {
+        eprintln!("{}",i);
         let sv = bytes.read_i32::<LittleEndian>().unwrap() as i32;
         let typ = bytes.read_u32::<LittleEndian>().unwrap() as u32;
-
         let mut buf = [0; 32];
         bytes.read_exact(&mut buf);
-
         if typ & 0x80000000 == 0 {
-            constants[i] = field::constant(U256::from(sv));
+            if sv < 0 {
+                constants[i] = field::constant(M-U256::from(-sv));
+            } else {
+                constants[i] = field::constant(U256::from(sv));
+            }
         } else {
             constants[i] =
                 field::constant(U256::from_le_bytes(buf).mul_redc(uint!(1_U256), M, INV));
         }
     }
-
     return constants;
 }
 
@@ -209,6 +211,7 @@ pub fn get_iosignals() -> Vec<InputOutputList> {
 
 /// Run cpp witness generator and optimize graph
 pub fn build_witness() -> eyre::Result<()> {
+    eprint!("build_witness");
     let mut signal_values = vec![field::undefined(); ffi::get_total_signal_no() as usize];
     signal_values[0] = field::constant(uint!(1_U256));
 
@@ -218,7 +221,7 @@ pub fn build_witness() -> eyre::Result<()> {
     for i in 0..total_input_len {
         signal_values[i + 1] = field::input(i + 1, uint!(0_U256));
     }
-
+    eprintln!("before calc");
     let mut ctx = ffi::Circom_CalcWit {
         signalValues: signal_values,
         componentMemory: vec![
@@ -229,7 +232,7 @@ pub fn build_witness() -> eyre::Result<()> {
         templateInsId2IOSignalInfoList: get_iosignals(),
         listOfTemplateMessages: vec![],
     };
-
+    eprint!("Running witness generator");
     // measure time
     let now = Instant::now();
     unsafe {
