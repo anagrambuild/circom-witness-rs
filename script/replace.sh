@@ -12,6 +12,8 @@ filename=$(basename "$1" .cpp)
 cat <<EOT > "$filename.new"
 #include "witness/include/witness.h"
 #include "witness/src/generate.rs.h"
+#include <unistd.h> 
+#include <iostream>
 
 /// We need this accessor since cxx doesn't support hashmaps yet
 class IOSignalInfoAccessor {
@@ -22,6 +24,7 @@ public:
   explicit IOSignalInfoAccessor(Circom_CalcWit *calcWit)
       : calcWitContext(calcWit) {}
   auto operator[](size_t index) const -> decltype(auto) {
+    std::cout << "Index " << index << " size " << get_size_of_input_hashmap() << "\n";
     return (calcWitContext
                 ->templateInsId2IOSignalInfoList)[index % get_size_of_input_hashmap()];
   }

@@ -1,4 +1,7 @@
 use std::{env, fs, path::Path, process::Command};
+use std::fs::File;
+use std::io::{BufRead, BufReader, Write};
+
 fn main() {
     if cfg!(feature = "build-witness") {
         let witness_cpp = env::var("WITNESS_CPP").unwrap();
@@ -33,8 +36,10 @@ fn main() {
             .flag("-std=c++14")
             .flag("-w")
             .flag("-d")
+            .flag("-g")
             .compile("witness");
 
         println!("cargo:rerun-if-changed={}", circuit_file.to_str().unwrap());
+        println!("cargo:rerun-if-changed=src/circuit.cc");
     }
 }

@@ -232,7 +232,7 @@ pub fn Fr_isTrue(a: *mut FrElement) -> bool {
 
     let a = unsafe { (*a).0 };
     assert!(a < nodes.len());
-    assert!(constant[a]);
+    //assert!(constant[a]);
     values[a] != U256::ZERO
 }
 

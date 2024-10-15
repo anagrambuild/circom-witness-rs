@@ -146,7 +146,6 @@ pub fn get_constants() -> Vec<FrElement> {
         + (ffi::get_size_of_witness() as usize) * 8..];
     let mut constants = vec![field::constant(U256::from(0)); ffi::get_size_of_constants() as usize];
     for i in 0..ffi::get_size_of_constants() as usize {
-        eprintln!("{}",i);
         let sv = bytes.read_i32::<LittleEndian>().unwrap() as i32;
         let typ = bytes.read_u32::<LittleEndian>().unwrap() as u32;
         let mut buf = [0; 32];
@@ -274,14 +273,6 @@ pub fn build_witness() -> eyre::Result<()> {
         _ = graph::evaluate(&nodes, &inputs, &signals);
     }
     eprintln!("Calculation took: {:?}", now.elapsed() / 10);
-
-    // Print graph
-    // for (i, node) in nodes.iter().enumerate() {
-    //     println!("node[{}] = {:?}", i, node);
-    // }
-    // for (i, j) in signals.iter().enumerate() {
-    //     println!("signal[{}] = node[{}]", i, j);
-    // }
 
     Ok(())
 }

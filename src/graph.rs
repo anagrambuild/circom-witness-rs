@@ -77,10 +77,7 @@ impl Operation {
             Mul => a.mul_mod(b, M),
             Neg => a.wrapping_neg(),
             Inv => a.inv_mod(M).unwrap(), //fix this
-            Div => {
-                let tmp = a.inv_mod(M).unwrap();
-                a.mul_mod(b, tmp)
-            },
+            Div => a.mul_mod(b.inv_mod(M).unwrap(), M),
             Sqr => a.pow_mod(U256::from(2), M),
             Idiv => a.wrapping_div(b),
             Pow => a.pow_mod(b, M),
